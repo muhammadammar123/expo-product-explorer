@@ -1,13 +1,20 @@
 import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnimatedIcon } from '@/components/animated-icon';
 import { HintRow } from '@/components/hint-row';
+import { ProductCard } from '@/components/product-card';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+
+const PRODUCTS = [
+  { id: '1', name: 'Wireless Headphones', price: '$49.99' },
+  { id: '2', name: 'Mechanical Keyboard', price: '$89.99' },
+  { id: '3', name: 'USB-C Hub (7-in-1)', price: '$34.99' },
+];
 
 function getDevMenuHint() {
   if (Platform.OS === 'web') {
@@ -32,34 +39,54 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
+
+        {/* ── Sticky header — always visible ── */}
+        <ThemedView type="backgroundElement" style={styles.stickyHeader}>
           <AnimatedIcon />
           <ThemedText type="title" style={styles.title}>
-  Muhammad Ammar
-</ThemedText>
-
-<ThemedText type="subtitle" style={styles.title}>
-  Roll No: 23i-3052
-</ThemedText>
+            Muhammad Ammar
+          </ThemedText>
+          <ThemedText type="subtitle" style={styles.title}>
+            23i-3052
+          </ThemedText>
         </ThemedView>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+        {/* ── Scrollable body ── */}
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <ThemedText type="code" style={styles.code}>
+            get started
+          </ThemedText>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+          <ThemedView type="backgroundElement" style={styles.stepContainer}>
+            <HintRow
+              title="Try editing"
+              hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+            />
+            <HintRow title="Dev tools" hint={getDevMenuHint()} />
+            <HintRow
+              title="Fresh start"
+              hint={<ThemedText type="code">npm run reset-project</ThemedText>}
+            />
+          </ThemedView>
 
-        {Platform.OS === 'web' && <WebBadge />}
+          {/* Product Explorer Section */}
+          <ThemedText type="code" style={styles.code}>
+            product explorer
+          </ThemedText>
+
+          <ThemedView type="backgroundElement" style={styles.productSection}>
+            {PRODUCTS.map((product) => (
+              <ProductCard key={product.id} name={product.name} price={product.price} />
+            ))}
+          </ThemedView>
+
+          {Platform.OS === 'web' && <WebBadge />}
+        </ScrollView>
+
       </SafeAreaView>
     </ThemedView>
   );
@@ -68,23 +95,30 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: 'center',
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
+    width: '100%',
     maxWidth: MaxContentWidth,
   },
-  heroSection: {
+  stickyHeader: {
     alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
+    paddingVertical: Spacing.three,
     paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    gap: Spacing.two,
+    borderBottomLeftRadius: Spacing.three,
+    borderBottomRightRadius: Spacing.three,
+  },
+  scroll: {
+    flex: 1,
+    alignSelf: 'stretch',
+  },
+  scrollContent: {
+    paddingHorizontal: Spacing.four,
+    paddingTop: Spacing.three,
+    paddingBottom: BottomTabInset + Spacing.three,
+    gap: Spacing.three,
   },
   title: {
     textAlign: 'center',
@@ -94,9 +128,14 @@ const styles = StyleSheet.create({
   },
   stepContainer: {
     gap: Spacing.three,
-    alignSelf: 'stretch',
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.four,
+    borderRadius: Spacing.four,
+  },
+  productSection: {
+    gap: Spacing.two,
+    paddingHorizontal: Spacing.three,
+    paddingVertical: Spacing.three,
     borderRadius: Spacing.four,
   },
 });
