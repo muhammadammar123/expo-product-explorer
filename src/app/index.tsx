@@ -35,8 +35,12 @@ export default function HomeScreen() {
         <ThemedView style={styles.heroSection}>
           <AnimatedIcon />
           <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
+  Muhammad Ammar
+</ThemedText>
+
+<ThemedText type="subtitle" style={styles.title}>
+  Roll No: 23i-3052
+</ThemedText>
         </ThemedView>
 
         <ThemedText type="code" style={styles.code}>
