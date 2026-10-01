@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Check Expo project
-        run: npx expo-command-that-does-not-exist
+        run: npx expo-doctor
 
       - name: Build Expo web app
         run: npx expo export --platform web
